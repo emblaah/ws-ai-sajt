@@ -2,18 +2,13 @@
 import React from "react";
 
 import { useState } from "react";
+import { Recipe } from "@/types/recipeTypes";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
 
-  type Recipe = {
-    title: string;
-    ingredients: string[];
-    instructions: string[];
-    time: string;
-  };
 
   const handleGenerate = async () => {
     setLoading(true);
