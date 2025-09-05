@@ -23,10 +23,13 @@ export default function Home() {
       });
 
       const data = await res.json();
-      if (data.parsedOutPut) {
+      if (data.parsedOutPut.length > 0) {
         setRecipes(data.parsedOutPut);
         console.log(data.parsedOutPut);
         setPrompt("");
+      } else if (data.parsedOutPut.length === 0) {
+        alert("Please provide a valid ingredient");
+        setRecipes([]);
       } else {
         alert("Didnt go trough the ai");
         setRecipes([]);
