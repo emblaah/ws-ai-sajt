@@ -9,7 +9,6 @@ export default function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
 
-
   const handleGenerate = async () => {
     setLoading(true);
     setRecipes([]);
@@ -76,6 +75,7 @@ export default function Home() {
                 <li key={key}> {item} </li>
               ))}{" "}
             </div>
+            <li> {recipe.difficulty} </li>
             <li> {recipe.time}min </li>
           </div>
         ))}

@@ -11,6 +11,7 @@ Always respond with a JSON array of a recipe. Each recipe must include:
 - "ingredients": an array of ingredients
 - "instructions": an array of step-by-step cooking instructions
 - "time": total preparation and cooking time in minutes
+- "difficulty": a string that describes how hard the recipe is (Easy, Medium, or Hard)
 
 Return exactly the number of recipes requested by the user. 
 Use short and clear instructions. 
