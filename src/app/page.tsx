@@ -1,15 +1,23 @@
 "use client";
+import React from "react";
 
 import { useState } from "react";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
-  const [result, setResult] = useState("");
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(false);
+
+  type Recipe = {
+    title: string;
+    ingredients: string[];
+    instructions: string[];
+    time: string;
+  };
 
   const handleGenerate = async () => {
     setLoading(true);
-    setResult("");
+    setRecipes([]);
 
     try {
       const res = await fetch("/api/recipe", {
@@ -21,14 +29,18 @@ export default function Home() {
       });
 
       const data = await res.json();
-      if (data.output) {
-        setResult(data.output);
+      if (data.parsedOutPut) {
+        setRecipes(data.parsedOutPut);
+        console.log(data.parsedOutPut);
+        setPrompt("");
       } else {
-        setResult("No response from AI");
+        alert("Didnt go trough the ai");
+        setRecipes([]);
       }
     } catch (err) {
       console.error(err);
-      setResult("Error occurred while generating.");
+      setPrompt("");
+      alert("Error occurred while generating.");
     }
 
     setLoading(false);
@@ -54,12 +66,25 @@ export default function Home() {
         {loading ? "Generating..." : "Get Recommendations"}
       </button>
 
-      {result && (
-        <div className="mt-6 p-4 border rounded w-96">
-          <h2 className="font-semibold mb-2">AI Suggests:</h2>
-          <p>{result}</p>
-        </div>
-      )}
+      <div className="flex flex-col m-4 p-6">
+        {recipes.map((recipe, i) => (
+          <div className="flex flex-col" key={i}>
+            <li>{recipe.title}</li>
+            <div>
+              {recipe.instructions.map((item, key) => (
+                <li key={key}> {item} </li>
+              ))}
+            </div>
+            <div>
+              {" "}
+              {recipe.ingredients.map((item, key) => (
+                <li key={key}> {item} </li>
+              ))}{" "}
+            </div>
+            <li> {recipe.time}min </li>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
