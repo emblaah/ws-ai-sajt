@@ -6,43 +6,50 @@ import { useState } from "react";
 import { Recipe } from "@/types/recipeTypes";
 
 export default function Home() {
+  type UiState =
+    | { status: "idle" }
+    | { status: "loading" }
+    | { status: "success"; recipes: Recipe[] }
+    | { status: "error"; message: string };
+
+  const [uiState, setUiState] = useState<UiState>({ status: "idle" });
   const [prompt, setPrompt] = useState("");
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
-    setLoading(true);
-    setRecipes([]);
+    if (!prompt.trim()) {
+      setUiState({
+        status: "error",
+        message: "Please enter at least one ingredient.",
+      });
+      return;
+    }
+    setUiState({ status: "loading" });
 
     try {
       const res = await fetch("/api/recipe", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
       });
 
-      const data = await res.json();
+      const data: { parsedOutPut: Recipe[] } = await res.json();
 
-      if (data.parsedOutPut.length > 0) {
-        setRecipes(data.parsedOutPut);
-        console.log(data.parsedOutPut);
+      if (Array.isArray(data.parsedOutPut) && data.parsedOutPut.length > 0) {
+        setUiState({ status: "success", recipes: data.parsedOutPut });
         setPrompt("");
-      } else if (data.parsedOutPut.length === 0) {
-        alert("Please provide a valid ingredient");
-        setRecipes([]);
       } else {
-        alert("Didnt go trough the ai");
-        setRecipes([]);
+        setUiState({
+          status: "error",
+          message: "Please provide a valid ingredient",
+        });
       }
     } catch (err) {
       console.error(err);
-      setPrompt("");
-      alert("Error occurred while generating.");
+      setUiState({
+        status: "error",
+        message: "Error occurred while generating.",
+      });
     }
-
-    setLoading(false);
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -97,16 +104,18 @@ export default function Home() {
                     placeholder="Enter your ingredients"
                     className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200/50 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-transparent transition-all duration-300 text-lg"
                     onKeyDown={(e) =>
-                      e.key === "Enter" && !loading && handleGenerate()
+                      e.key === "Enter" &&
+                      uiState.status !== "loading" &&
+                      handleGenerate()
                     }
                   />
                 </div>
                 <button
                   onClick={handleGenerate}
-                  disabled={loading}
+                  disabled={uiState.status === "loading"}
                   className="bg-gradient-to-r from-violet-600 to-orange-500 text-white px-8 py-4 rounded-xl font-semibold text-lg disabled:opacity-50 hover:scale-105 transform transition-all duration-300 shadow-xl hover:shadow-2xl disabled:hover:scale-100 flex items-center space-x-2 justify-center sm:justify-start"
                 >
-                  {loading ? (
+                  {uiState.status === "loading" ? (
                     <>
                       <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
                       <span>Creating...</span>
@@ -123,7 +132,7 @@ export default function Home() {
           </div>
         </div>
 
-        {loading && (
+        {uiState.status === "loading" && (
           <div className="flex items-center space-x-4 text-gray-600 mb-8">
             <div className="flex space-x-2">
               <div className="w-3 h-3 bg-violet-500 rounded-full animate-bounce"></div>
@@ -136,10 +145,10 @@ export default function Home() {
           </div>
         )}
 
-        {recipes.length > 0 && (
+        {uiState.status === "success" && (
           <div className="w-full max-w-6xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {recipes.map((recipe, i) => (
+              {uiState.recipes.map((recipe, i) => (
                 <div
                   key={i}
                   className="group relative"
@@ -225,13 +234,20 @@ export default function Home() {
           </div>
         )}
 
-        {recipes.length === 0 && !loading && (
+        {uiState.status === "idle" && (
           <div className="text-center text-gray-500 max-w-md">
             <ChefHat className="w-16 h-16 mx-auto mb-4 text-gray-300" />
             <p className="text-lg">
               Enter your ingredients above and let AI create amazing recipes for
               you!
             </p>
+          </div>
+        )}
+
+        {uiState.status === "error" && (
+          <div className="text-center text-red-500 max-w-md">
+            <ChefHat className="w-16 h-16 mx-auto mb-4 text-red-300" />
+            <p className="text-lg font-semibold">{uiState.message}</p>
           </div>
         )}
       </div>
