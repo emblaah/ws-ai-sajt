@@ -24,6 +24,7 @@ export default function Home() {
       });
 
       const data = await res.json();
+
       if (data.parsedOutPut.length > 0) {
         setRecipes(data.parsedOutPut);
         console.log(data.parsedOutPut);
@@ -45,7 +46,7 @@ export default function Home() {
   };
 
   const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty.toLowerCase()) {
+    switch (difficulty.charAt(0).toLowerCase()) {
       case "easy":
         return "text-emerald-600 bg-emerald-50";
       case "medium":
@@ -89,14 +90,14 @@ export default function Home() {
           <div className="relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-orange-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
             <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/20">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center flex-col sm:flex-row items-stretch gap-4 space-x-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     type="text"
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="What ingredients do you have? (e.g., chicken, garlic, pasta...)"
+                    placeholder="Enter your ingredients"
                     className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200/50 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-transparent transition-all duration-300 text-lg"
                     onKeyPress={(e) =>
                       e.key === "Enter" && !loading && handleGenerate()
@@ -106,7 +107,7 @@ export default function Home() {
                 <button
                   onClick={handleGenerate}
                   disabled={loading}
-                  className="bg-gradient-to-r from-violet-600 to-orange-500 text-white px-8 py-4 rounded-xl font-semibold text-lg disabled:opacity-50 hover:scale-105 transform transition-all duration-300 shadow-xl hover:shadow-2xl disabled:hover:scale-100 flex items-center space-x-2"
+                  className="bg-gradient-to-r from-violet-600 to-orange-500 text-white px-8 py-4 rounded-xl font-semibold text-lg disabled:opacity-50 hover:scale-105 transform transition-all duration-300 shadow-xl hover:shadow-2xl disabled:hover:scale-100 flex items-center space-x-2 justify-center sm:justify-start"
                 >
                   {loading ? (
                     <>
