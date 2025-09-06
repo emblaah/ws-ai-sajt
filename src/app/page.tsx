@@ -46,13 +46,13 @@ export default function Home() {
   };
 
   const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty.charAt(0).toLowerCase()) {
+    switch (difficulty.toLowerCase()) {
       case "easy":
-        return "text-emerald-600 bg-emerald-50";
+        return "text-emerald-600 bg-emerald-100";
       case "medium":
-        return "text-amber-600 bg-amber-50";
+        return "text-amber-600 bg-amber-100";
       case "hard":
-        return "text-red-600 bg-red-50";
+        return "text-red-600 bg-red-100";
       default:
         return "text-gray-600 bg-gray-50";
     }
@@ -60,7 +60,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-orange-50 to-rose-50 relative overflow-hidden">
-      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-violet-400 to-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
         <div className="absolute top-40 right-20 w-72 h-72 bg-gradient-to-r from-orange-400 to-rose-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
@@ -68,7 +67,6 @@ export default function Home() {
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6">
-        {/* Header Section */}
         <div className="text-center mb-12 space-y-4">
           <div className="flex items-center justify-center space-x-3 mb-4">
             <div className="relative">
@@ -85,12 +83,11 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Search Section */}
         <div className="w-full max-w-2xl mb-12">
           <div className="relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-orange-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
             <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/20">
-              <div className="flex items-center flex-col sm:flex-row items-stretch gap-4 space-x-4">
+              <div className="flex flex-col sm:flex-row items-stretch gap-4 space-x-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
@@ -99,7 +96,7 @@ export default function Home() {
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder="Enter your ingredients"
                     className="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200/50 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-transparent transition-all duration-300 text-lg"
-                    onKeyPress={(e) =>
+                    onKeyDown={(e) =>
                       e.key === "Enter" && !loading && handleGenerate()
                     }
                   />
@@ -126,7 +123,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Loading Animation */}
         {loading && (
           <div className="flex items-center space-x-4 text-gray-600 mb-8">
             <div className="flex space-x-2">
@@ -140,7 +136,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* Recipes Grid */}
         {recipes.length > 0 && (
           <div className="w-full max-w-6xl">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -154,7 +149,6 @@ export default function Home() {
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-orange-500/20 rounded-3xl blur group-hover:blur-md transition-all duration-300"></div>
                   <div className="relative bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-500 group-hover:scale-105">
-                    {/* Recipe Header */}
                     <div className="flex items-start justify-between mb-6">
                       <div>
                         <h3 className="text-2xl font-bold text-gray-800 mb-2 group-hover:text-violet-600 transition-colors duration-300">
@@ -182,7 +176,6 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Ingredients */}
                     <div className="mb-6">
                       <div className="flex items-center space-x-2 mb-3">
                         <Utensils className="w-5 h-5 text-violet-600" />
@@ -205,7 +198,6 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Instructions */}
                     <div>
                       <div className="flex items-center space-x-2 mb-3">
                         <ChefHat className="w-5 h-5 text-orange-600" />
@@ -233,7 +225,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* Empty State */}
         {recipes.length === 0 && !loading && (
           <div className="text-center text-gray-500 max-w-md">
             <ChefHat className="w-16 h-16 mx-auto mb-4 text-gray-300" />
@@ -276,47 +267,3 @@ export default function Home() {
     </div>
   );
 }
-
-//   return (
-//     <div className="flex flex-col items-center justify-center min-h-screen p-6">
-//       <h1 className="text-2xl font-bold mb-4">🍲 Recipe Recommender</h1>
-
-//       <input
-//         type="text"
-//         value={prompt}
-//         onChange={(e) => setPrompt(e.target.value)}
-//         placeholder="Enter your preferences..."
-//         className="border rounded px-3 py-2 w-80 mb-3"
-//       />
-
-//       <button
-//         onClick={handleGenerate}
-//         disabled={loading}
-//         className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-//       >
-//         {loading ? "Generating..." : "Get Recommendations"}
-//       </button>
-
-//       <div className="flex flex-col m-4 p-6">
-//         {recipes.map((recipe, i) => (
-//           <div className="flex flex-col" key={i}>
-//             <li>{recipe.title}</li>
-//             <div>
-//               {recipe.instructions.map((item, key) => (
-//                 <li key={key}> {item} </li>
-//               ))}
-//             </div>
-//             <div>
-//               {" "}
-//               {recipe.ingredients.map((item, key) => (
-//                 <li key={key}> {item} </li>
-//               ))}{" "}
-//             </div>
-//             <li> {recipe.difficulty} </li>
-//             <li> {recipe.time}min </li>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
