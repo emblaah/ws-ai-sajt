@@ -7,3 +7,10 @@ export type Recipe = {
 };
 
 export type Difficulty = "easy" | "medium" | "hard";
+
+
+export  type UiState =
+    | { status: "idle" }
+    | { status: "loading" }
+    | { status: "success"; recipes: Recipe[] }
+    | { status: "error"; message: string };

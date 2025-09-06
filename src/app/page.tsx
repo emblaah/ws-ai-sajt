@@ -4,14 +4,9 @@ import { ChefHat, Clock, Star, Utensils, Sparkles, Search } from "lucide-react";
 
 import { useState } from "react";
 import { Recipe } from "@/types/recipeTypes";
+import { UiState } from "@/types/recipeTypes";
 
 export default function Home() {
-  type UiState =
-    | { status: "idle" }
-    | { status: "loading" }
-    | { status: "success"; recipes: Recipe[] }
-    | { status: "error"; message: string };
-
   const [uiState, setUiState] = useState<UiState>({ status: "idle" });
   const [prompt, setPrompt] = useState("");
 
@@ -33,6 +28,7 @@ export default function Home() {
       });
 
       const data: { parsedOutPut: Recipe[] } = await res.json();
+      console.log("data", data);
 
       if (Array.isArray(data.parsedOutPut) && data.parsedOutPut.length > 0) {
         setUiState({ status: "success", recipes: data.parsedOutPut });
@@ -113,8 +109,7 @@ export default function Home() {
                 <button
                   onClick={handleGenerate}
                   disabled={uiState.status === "loading"}
-                  className="bg-gradient-to-r from-violet-600 to-orange-500 text-white px-8 py-4 rounded-xl font-semibold text-lg disabled:opacity-50 hover:scale-105 transform transition-all duration-300 shadow-xl hover:shadow-2xl disabled:hover:scale-100 flex items-center space-x-2 justify-center sm:justify-start"
-                >
+                  className="bg-gradient-to-r from-violet-600 to-orange-500 text-white px-8 py-4 rounded-xl font-semibold text-lg disabled:opacity-50 hover:scale-105 transform transition-all duration-300 shadow-xl hover:shadow-2xl disabled:hover:scale-100 flex items-center space-x-2 justify-center sm:justify-start">
                   {uiState.status === "loading" ? (
                     <>
                       <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
@@ -147,15 +142,19 @@ export default function Home() {
 
         {uiState.status === "success" && (
           <div className="w-full max-w-6xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div
+              className={`grid grid-cols-1 ${
+                uiState.recipes.length === 1
+                  ? "md:grid-cols-1"
+                  : "md:grid-cols-2"
+              } gap-8`}>
               {uiState.recipes.map((recipe, i) => (
                 <div
                   key={i}
                   className="group relative"
                   style={{
                     animation: `fadeInUp 0.6s ease-out ${i * 0.2}s both`,
-                  }}
-                >
+                  }}>
                   <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-orange-500/20 rounded-3xl blur group-hover:blur-md transition-all duration-300"></div>
                   <div className="relative bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 hover:shadow-3xl transition-all duration-500 group-hover:scale-105">
                     <div className="flex items-start justify-between mb-6">
@@ -173,8 +172,7 @@ export default function Home() {
                           <span
                             className={`px-3 py-1 rounded-full text-sm font-semibold ${getDifficultyColor(
                               recipe.difficulty
-                            )}`}
-                          >
+                            )}`}>
                             {recipe.difficulty}
                           </span>
                         </div>
@@ -195,8 +193,7 @@ export default function Home() {
                           {recipe.ingredients.map((ingredient, key) => (
                             <div
                               key={key}
-                              className="flex items-center space-x-2"
-                            >
+                              className="flex items-center space-x-2">
                               <div className="w-2 h-2 bg-gradient-to-r from-violet-500 to-orange-500 rounded-full"></div>
                               <span className="text-gray-700 text-sm">
                                 {ingredient}
