@@ -12,6 +12,7 @@ Always respond with a JSON array of a recipe. Each recipe must include:
 - "instructions": an array of step-by-step cooking instructions
 - "time": total preparation and cooking time in minutes
 - "difficulty": a string that describes how hard the recipe is (Easy, Medium, or Hard)
+- "rating": simulate 10 home cooks rating this recipe from 1–5 stars. Analyze their individual scores and comments, then provide the average rating (1-5 stars with one point). Some cooks should be picky, so not all scores should be high.
 
 Return exactly the number of recipes requested by the user. 
 If the user writes something that is not a food, or an ingredient dont provide a recipe.

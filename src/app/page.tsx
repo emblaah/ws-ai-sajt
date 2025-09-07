@@ -179,7 +179,7 @@ export default function Home() {
                       </div>
                       <div className="flex items-center space-x-1">
                         <Star className="w-5 h-5 text-yellow-400 fill-current" />
-                        <span className="text-gray-600 font-medium">4.8</span>
+                        <span className="text-gray-600 font-medium">{recipe.rating}</span>
                       </div>
                     </div>
 
