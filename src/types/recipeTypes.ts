@@ -2,12 +2,12 @@ export type Recipe = {
   title: string;
   ingredients: string[];
   instructions: string[];
-  time: string;
+  time: number;
   difficulty: Difficulty;
   rating: number;
 };
 
-export type Difficulty = "easy" | "medium" | "hard";
+export type Difficulty = "Easy" | "medium" | "hard";
 
 export type UiState =
   | { status: "idle" }
